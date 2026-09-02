@@ -27,19 +27,19 @@
   <div class="eyebrow">The approach</div>
   <h1>Finding out what a system actually does</h1>
   <p class="lede">Before you can rebuild a system you have to know what it is — and the ways teams
-  usually find out are quietly broken. This is the method that worked for us, with the numbers
-  that prove where the usual methods failed.</p>
+  usually find out are quietly broken. This is the method that worked for us, with the receipts
+  from where the usual methods failed.</p>
 </div></div>
 
 <section><div class="wrap">
   <h2><span class="num">01</span>The trap of counting what you can see</h2>
-  <p>Our first plan was a list of 65 screens. It felt rigorous: a crawler had walked the running
-  application in every role, taken 351 screenshots, and the plan was derived from them. Derived —
+  <p>Our first plan was a list of screens — dozens of them. It felt rigorous: a crawler had walked the running
+  application in every role, taken hundreds of screenshots, and the plan was derived from them. Derived —
   that was its virtue over a hand-written list.</p>
-  <p>But <strong>65 was never a count of what the system does. It was a count of what a camera
+  <p>But <strong>that number was never a count of what the system does. It was a count of what a camera
   could reach.</strong> A screenshot crawler cannot photograph a stored procedure, a scheduled
   job, an endpoint no screen calls, or a rule that lives in a permission matrix. When we later
-  derived the feature list properly, <strong>15 of 32 features had no screen at all</strong> —
+  derived the feature list properly, <strong>roughly half the features had no screen at all</strong> —
   including the calculation the entire system existed to produce, which lived in stored
   procedures and was visible to nothing the crawler could see.</p>
   <div class="callout"><span class="k">The general form</span>
@@ -67,7 +67,7 @@
       <td>Anything with no screen to photograph</td></tr>
     <tr><td><strong>The written specification</strong></td>
       <td>Intent, and rules nobody would guess from code</td>
-      <td>Anything built after it was written — and ours contradicted itself in 19 places</td></tr>
+      <td>Anything built after it was written — and ours contradicted itself again and again</td></tr>
     <tr><td><strong>The permission workbooks</strong></td>
       <td>Thousands of individual access decisions, cell by cell</td>
       <td>Everything that is not a permission</td></tr>
@@ -82,15 +82,17 @@
 
   <p><strong>Why independence matters:</strong> two readers agreeing after reading <em>different</em>
   evidence is corroboration. Two readers agreeing after reading the <em>same document</em> is an
-  echo. We ran each reading blind to the others and only then reconciled: 440 findings, 82
-  contradictions, 63 open questions — and no single source saw more than 30 of the 32 features.
+  echo. We ran each reading blind to the others and only then reconciled: hundreds of findings, dozens of
+  contradictions, dozens of open questions — and no single source came close to seeing every
+  feature.
   The contradictions were not noise to be smoothed away; each one was a question with an owner.</p>
 
   <div class="callout"><span class="k">Rule that came out of this</span>
   <p><strong>Derive every number from an artifact that changes when reality changes.</strong>
-  A hand-written inventory has no oracle, so it stays wrong quietly. Our &#8220;8 batch
-  jobs&#8221; turned out to be four different true numbers wearing one label — 8 repositories,
-  9 programs, 9 scheduled registrations, 7 that actually recur — and no document could have
+  A hand-written inventory has no oracle, so it stays wrong quietly. What one label called &#8220;the batch
+  jobs&#8221; turned out to be four different true counts wearing one costume — the repositories,
+  the shipped programs, the scheduled registrations, and the jobs that actually recur, no two
+  equal — and no document could have
   caught it, because every document was copying another document. A fifty-line script reading
   the scheduler's own configuration caught it immediately, and keeps catching it.</p></div>
 </div></section>
@@ -126,27 +128,27 @@
 <section><div class="wrap">
   <h2><span class="num">04</span>Verify the plan by building against it</h2>
   <p class="sub">A plan is a theory about the work. Ours met reality in one long automated run:
-  sixteen batches of workers attempting all 121 unbuilt pieces, each instructed that <em>an honest
+  batches of workers attempting every unbuilt piece, each instructed that <em>an honest
   failure with a precise reason beats a faked success</em>.</p>
 
   <div class="tw"><table>
-    <thead><tr><th>Outcome</th><th class="n">Pieces</th><th>Meaning</th></tr></thead>
+    <thead><tr><th>Outcome</th><th class="n">Share</th><th>Meaning</th></tr></thead>
     <tbody>
-    <tr><td class="ok">Built, compiling, checks passing</td><td class="n">78</td>
-      <td>64% — real progress, with a caveat the <a href="lessons.html">lessons page</a> owns</td></tr>
-    <tr><td>Partly built — stopped at a real obstacle</td><td class="n">10</td>
+    <tr><td class="ok">Built, compiling, checks passing</td><td class="n">Just under two-thirds</td>
+      <td>Real progress, with a caveat the <a href="lessons.html">lessons page</a> owns</td></tr>
+    <tr><td>Partly built — stopped at a real obstacle</td><td class="n">A few</td>
       <td>Each named, with what is missing</td></tr>
-    <tr><td>Blocked on a human answer</td><td class="n">11</td>
+    <tr><td>Blocked on a human answer</td><td class="n">A few more</td>
       <td>Each named, with the question it waits on</td></tr>
-    <tr><td class="bad">Aimed at things that do not exist</td><td class="n">22</td>
+    <tr><td class="bad">Aimed at things that do not exist</td><td class="n">About a fifth</td>
       <td>The most valuable output of the run</td></tr>
     </tbody>
   </table></div>
 
-  <p>Only <strong>one batch in sixteen</strong> reported the plan had described its work
-  accurately. Sixteen rows named routes the legacy could not even serve — a whole navigation
+  <p>Only <strong>a single batch</strong> reported the plan had described its work
+  accurately. A whole block of rows named routes the legacy could not even serve — a whole navigation
   section existed in the source tree but was commented out of the application, and our route
-  scanner read the routing files without stripping comments. Five features our sources had
+  scanner read the routing files without stripping comments. A handful of features our sources had
   written off as &#8220;no trace anywhere&#8221; all existed when a batch was sent to
   <em>investigate rather than invent</em> — one of them fully configured in production. And two
   of our scariest documented risks turned out to be false: the &#8220;destructive&#8221; void
@@ -163,7 +165,8 @@
 
 <footer class="site"><div class="wrap">
   <p>Field notes from a real legacy-modernization engagement — a national healthcare workforce
-  survey system, anonymized. The numbers are real; the names are deliberately absent. Hand-built
+  survey system, anonymized. The stories are real; the names and the client's figures are
+  deliberately absent. Hand-built
   static HTML, no framework, no tracking.</p>
 </div></footer>
 

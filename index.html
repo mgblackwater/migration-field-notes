@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Migration Field Notes</title>
-<meta name="description" content="What we learned rebuilding a twenty-year-old healthcare system — the techniques, the failure patterns, and the rule that survived them all.">
+<meta name="description" content="What we learned rebuilding a decades-old healthcare system — the techniques, the failure patterns, and the rule that survived them all.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
@@ -26,7 +26,7 @@
 <div class="hero"><div class="wrap">
   <div class="eyebrow">Field notes from a real engagement</div>
   <h1>The migration is only as good as the thing that judges it</h1>
-  <p class="lede">We spent months rebuilding a twenty-year-old healthcare workforce system —
+  <p class="lede">We spent months rebuilding a decades-old healthcare workforce system —
   a framework-locked monolith on an end-of-life runtime, eight scheduled jobs, and a shared
   database acting as the integration bus. These notes are what survived: the techniques that have
   names, the failure that kept returning in different clothes, and the numbers we can prove.</p>
@@ -44,7 +44,7 @@
     </a>
     <a class="tile" href="lessons.html">
       <b>The lessons</b>
-      <span>One failure appeared eight times wearing different clothes: a check that passes
+      <span>The same failure kept returning in different clothes: a check that passes
       without exercising the thing it names. The catalogue, and the rules that came out of it.</span>
       <span class="go">Read the lessons &#8594;</span>
     </a>
@@ -64,32 +64,33 @@
 </div></section>
 
 <section><div class="wrap">
-  <h2><span class="num">The honest numbers</span>What actually happened</h2>
-  <p class="sub">Every figure below is real, measured on the engagement these notes come from.</p>
+  <h2><span class="num">The honest record</span>What actually happened</h2>
+  <p class="sub">Every claim below was measured on a real engagement. The exact client figures stay
+  off the public page, so honest magnitudes stand in for them.</p>
   <div class="tw"><table>
-    <thead><tr><th>Claim</th><th>Number</th><th>What it taught</th></tr></thead>
+    <thead><tr><th>Claim</th><th>Magnitude</th><th>What it taught</th></tr></thead>
     <tbody>
     <tr><td>Features found by reading six sources independently, versus the specification's own
-      chapter count</td><td class="n"><strong>32 vs 21</strong></td>
-      <td>No single source saw more than 30 of the 32. Independence is what makes agreement mean
+      chapter count</td><td class="n"><strong>Half again as many</strong></td>
+      <td>And no single source saw them all. Independence is what makes agreement mean
       something.</td></tr>
-    <tr><td>Features with no user interface at all</td><td class="n"><strong>15 of 32</strong></td>
+    <tr><td>Features with no user interface at all</td><td class="n"><strong>Roughly half</strong></td>
       <td>A plan derived from screenshots is structurally blind to half the system.</td></tr>
     <tr><td>Build batches that found the plan accurate, when we finally built against it</td>
-      <td class="n"><strong>1 of 16</strong></td>
+      <td class="n"><strong>Almost none</strong></td>
       <td>The feature-parity trap, measured. Plans describe systems well and work badly.</td></tr>
     <tr><td>Pieces of work aimed at routes the legacy could not even serve</td>
-      <td class="n"><strong>16</strong></td>
+      <td class="n"><strong>A whole section&#8217;s worth</strong></td>
       <td>Our route scanner read configuration files without stripping comments. Derived numbers
       are only as good as the deriver.</td></tr>
     <tr><td>Times one failure pattern recurred — a green check that never exercised the thing it
-      named</td><td class="n"><strong>8</strong></td>
+      named</td><td class="n"><strong>Again and again</strong></td>
       <td>The central lesson of the whole engagement. See <a href="lessons.html">the lessons</a>.</td></tr>
     <tr><td>&#8220;Impossible&#8221; features — no trace on any source — that turned out to exist
-      when someone finally looked</td><td class="n"><strong>5 of 5</strong></td>
+      when someone finally looked</td><td class="n"><strong>Every single one</strong></td>
       <td>Twenty minutes in the running system beats a week of reading its code.</td></tr>
     <tr><td>Automated checks passing on the rebuild at time of writing</td>
-      <td class="n"><strong>6,889</strong></td>
+      <td class="n"><strong>Thousands</strong></td>
       <td>And the page on <a href="lessons.html">lessons</a> explains exactly how much — and how
       little — that green is worth.</td></tr>
     </tbody>
@@ -97,7 +98,7 @@
 </div></section>
 
 <section><div class="wrap">
-  <h2><span class="num">The thesis</span>One sentence, earned eight times</h2>
+  <h2><span class="num">The thesis</span>One sentence, earned repeatedly</h2>
   <div class="callout ok"><span class="k">If you keep nothing else</span>
   <p><strong>Before you trust a check, make it fail.</strong> Break the code on purpose and watch
   the check notice. If you cannot describe the input that turns it red, it is not a check — it is
@@ -111,7 +112,8 @@
 
 <footer class="site"><div class="wrap">
   <p>Field notes from a real legacy-modernization engagement — a national healthcare workforce
-  survey system, anonymized. The numbers are real; the names are deliberately absent. Hand-built
+  survey system, anonymized. The stories are real; the names and the client's figures are
+  deliberately absent. Hand-built
   static HTML, no framework, no tracking.</p>
 </div></footer>
 

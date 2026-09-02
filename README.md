@@ -21,10 +21,11 @@ root. The repository was made public on 2026-09-02 to serve it.
 
 ## Content policy
 
-The site is written to be publishable: **the numbers are real; the names are not here.** No client,
+The site is written to be publishable: **the stories are real; the names and the client's figures are not here.** No client,
 product, institution, person, hostname, credential, or security finding from the source engagement
-appears in these pages, and **none may be added**. The engagement is described only as "a national
-healthcare workforce survey system." An anonymity sweep (sixteen identifying terms, with a negative
+appears in these pages, and **none may be added**. Exact engagement metrics — feature counts,
+check totals, batch outcomes — are excluded too; the pages use honest magnitudes instead. The engagement is described only as "a national
+healthcare workforce survey system." An anonymity sweep (a list of identifying terms, with a negative
 control proving the sweep can fail) ran clean before first publish — re-run the idea after any
 substantial edit.
 

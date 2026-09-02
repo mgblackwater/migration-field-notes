@@ -25,7 +25,7 @@
 <main>
 <div class="hero"><div class="wrap">
   <div class="eyebrow">The lessons</div>
-  <h1>One failure, eight disguises</h1>
+  <h1>One failure, many disguises</h1>
   <p class="lede">Most of what went wrong on this engagement was the same thing going wrong
   repeatedly: <strong>a check that passes without ever exercising the thing it names.</strong>
   It is worse than having no check, because it converts &#8220;we don't know&#8221; into
@@ -34,7 +34,8 @@
 
 <section><div class="wrap">
   <h2><span class="num">01</span>The catalogue</h2>
-  <p class="sub">Eight real instances from one engagement. In every case the check was green.</p>
+  <p class="sub">Real instances from one engagement, in the order we met them. In every case the
+  check was green.</p>
 
   <div class="tw"><table>
     <thead><tr><th>What the green claimed</th><th>What the check could actually detect</th></tr></thead>
@@ -55,14 +56,14 @@
       <td class="bad">It matched a value measured moments earlier — the check compared reality
       against itself</td></tr>
     <tr><td>&#8220;Build succeeded&#8221;</td>
-      <td class="bad">Two projects out of four — the solution file had never included the API,
+      <td class="bad">Half the projects — the solution file had never included the API,
       so the build check never compiled it</td></tr>
-    <tr><td>All 45 checks pass on this screen</td>
+    <tr><td>Every check passes on this screen</td>
       <td class="bad">None of them looked at the second table the edit was supposed to cascade
       into — the one every report reads</td></tr>
     <tr><td>Screen labels match the legacy</td>
       <td class="bad">The expected labels had been copied from the rebuild's own menu — the
-      check compared the application against a copy of itself, through twelve green runs</td></tr>
+      check compared the application against a copy of itself, through run after green run</td></tr>
     </tbody>
   </table></div>
 
@@ -76,9 +77,10 @@
   <div class="callout ok"><span class="k">The discipline</span>
   <p><strong>Before trusting any check, break the code on purpose and watch the check go
   red.</strong> Late in our engagement this became routine, and the reports read differently:
-  &#8220;removing one authorization gate failed exactly 16 checks; removing the other failed 7,
-  overlapping in only 4; swapping the hand-written scoping rule for the generic one failed
-  exactly 11.&#8221; Those numbers are what a trustworthy green looks like — a green that has
+  &#8220;removing one authorization gate tripped a precise, repeatable set of checks; removing a
+  second tripped a different set that barely overlapped; swapping a hand-written scoping rule for
+  the generic one tripped exactly the checks that guard it.&#8221; That behaviour is what a
+  trustworthy green looks like — a green that has
   been red for the right reasons.</p></div>
   <p>We later found the same rule stated independently in Anthropic's write-up of their own
   large-scale migrations — <em>&#8220;validate the judge first: prove the harness passes the
@@ -123,16 +125,17 @@
     <thead><tr><th>The number</th><th>What it was taken to mean</th><th>What it actually was</th></tr></thead>
     <tbody>
     <tr><td><strong>&#8220;8 batch jobs&#8221;</strong></td><td>The programs to rebuild</td>
-      <td class="bad">Four true numbers in one costume: 8 repositories, 9 executables, 9
-      scheduled registrations, 7 that recur. One nightly job appeared in no list anywhere.</td></tr>
-    <tr><td><strong>&#8220;65 screens&#8221;</strong></td><td>The work remaining</td>
-      <td class="bad">What a crawler photographed. Fifteen features had no screen to
+      <td class="bad">Four true counts in one costume — repositories, executables, scheduled
+      registrations, and jobs that actually recur, no two equal. One nightly job appeared in no
+      list anywhere.</td></tr>
+    <tr><td><strong>&#8220;The screen list&#8221;</strong></td><td>The work remaining</td>
+      <td class="bad">What a crawler photographed. Half the features had no screen to
       photograph.</td></tr>
-    <tr><td><strong>&#8220;21 features&#8221;</strong></td><td>What the system does</td>
+    <tr><td><strong>&#8220;The feature count&#8221;</strong></td><td>What the system does</td>
       <td class="bad">The chapter headings of one specification. Everything inside a chapter, or
       built after it, had no row.</td></tr>
-    <tr><td><strong>&#8220;12 of 65 done&#8221;</strong></td><td>18% complete</td>
-      <td class="bad">1 of 32 features started. Same work, honest denominator.</td></tr>
+    <tr><td><strong>&#8220;A healthy percentage done&#8221;</strong></td><td>Real progress</td>
+      <td class="bad">One feature started. Same work, honest denominator.</td></tr>
     </tbody>
   </table></div>
   <div class="callout"><span class="k">The rule</span>
@@ -155,11 +158,11 @@
   compiled. The error lived in the index, where no amount of code-reading could find it.</p>
 
   <h3>Investigate, never invent</h3>
-  <p>Five features had no trace on any source. The instruction that saved us: <em>find out why —
+  <p>A handful of features had no trace on any source. The instruction that saved us: <em>find out why —
   write no production code.</em> All five existed. One was fully configured in production. Two
   &#8220;catastrophic&#8221; documented risks were simply false. An agent — human or otherwise —
-  sent to <em>build</em> the missing thing would have invented five features that already
-  existed, differently.</p>
+  sent to <em>build</em> the missing thing would have invented every one of them — features that already
+  existed — differently.</p>
 
   <h3>Honest failure beats faked success — and must be said out loud</h3>
   <p>The single best behaviour we institutionalised: workers report
@@ -184,7 +187,8 @@
 
 <footer class="site"><div class="wrap">
   <p>Field notes from a real legacy-modernization engagement — a national healthcare workforce
-  survey system, anonymized. The numbers are real; the names are deliberately absent. Hand-built
+  survey system, anonymized. The stories are real; the names and the client's figures are
+  deliberately absent. Hand-built
   static HTML, no framework, no tracking.</p>
 </div></footer>
 
