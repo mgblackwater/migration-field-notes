@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Toolkit &amp; Reading — Migration Field Notes</title>
+<meta name="description" content="The tools that exist for migration work — Anthropic's migration kit, agentic modernization services, diffing proxies — plus four books and a reading order.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">Migration <span>Field Notes</span></a>
+  <nav class="site" aria-label="Site">
+    <a href="approach.html">The approach</a>
+    <a href="lessons.html">The lessons</a>
+    <a href="techniques.html">The techniques</a>
+    <a href="resources.html" aria-current="page">Toolkit &amp; reading</a>
+  </nav>
+</div></header>
+
+<main>
+<div class="hero"><div class="wrap">
+  <div class="eyebrow">Toolkit &amp; reading</div>
+  <h1>The shelf</h1>
+  <p class="lede">What exists for this work — checked by using it or reading it, not by
+  collecting links. Tools first, then four books, then the shortest reading order that gets you
+  dangerous.</p>
+</div></div>
+
+<section><div class="wrap">
+  <h2><span class="num">01</span>Agentic migration tooling</h2>
+
+  <div class="card">
+    <h4>Anthropic's migration method and kit</h4>
+    <div class="aka">A blog post worth studying, and its companion repository</div>
+    <dl>
+      <dt>What</dt><dd>A six-step method from running million-line migrations with Claude Code:
+      build a <strong>rulebook</strong> of translation decisions and a dependency map &#8594;
+      stress-test the rules on three files and <em>throw the output away, keeping the improved
+      rules</em> &#8594; translate in parallel batches with adversarial reviewers &#8594;
+      compile, test, and diff behaviour. The companion repo packages it: eight paste-ready
+      prompts, a rulebook template, queue-runner and build-daemon scripts, one worked
+      example.</dd>
+      <dt>The line to steal</dt><dd class="fit"><strong>&#8220;Validate the judge first&#8221;</strong>
+      — prove the harness passes the original code and fails deliberately broken code before
+      migrating anything. The same rule our engagement earned through eight failures, stated as
+      step zero.</dd>
+      <dt>Watch out</dt><dd class="trap">The kit defaults to <em>structure-preserving</em>
+      migrations — same design, new language. If you are redesigning as you migrate, its own
+      README says which parts change and which become invalid. Reference code, not a maintained
+      product.</dd>
+      <dt>Read</dt><dd><a href="https://claude.com/blog/ai-code-migration" rel="noopener">the write-up</a> &#183;
+      <a href="https://github.com/anthropics/code-migration-kit-with-claude-code" rel="noopener">the kit</a> &#183;
+      <a href="https://claude.com/solutions/code-modernization" rel="noopener">the solutions overview</a></dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>The code-modernization plugin for Claude Code</h4>
+    <div class="aka">The full lifecycle, as slash commands</div>
+    <dl>
+      <dt>What</dt><dd>An installable plugin enforcing the sequence migrations die by skipping:
+      <code>preflight &#8594; assess &#8594; map &#8594; extract-rules &#8594; brief &#8594;
+      (transform | reimagine | uplift) &#8594; harden</code>. Discovery writes reviewable
+      artifacts; a human approves the brief before any code is generated; the transform command
+      writes characterization tests <em>before</em> the implementation and proves equivalence
+      after.</dd>
+      <dt>Why it matters</dt><dd class="fit">It encodes the discipline this whole site argues
+      for. Our engagement ran its discovery half early and then re-invented its transform
+      discipline by hand — use it as designed instead.</dd>
+      <dt>Read</dt><dd><code>/plugin install code-modernization@claude-plugins-official</code>
+      in Claude Code, then read its README before running anything.</dd>
+    </dl>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Also on the shelf</th><th>What it is</th><th>Honest note</th></tr></thead>
+    <tbody>
+    <tr><td><a href="https://aws.amazon.com/transform/windows/net/" rel="noopener">AWS Transform for .NET</a></td>
+      <td>Agentic porting of .NET Framework applications to cross-platform .NET at scale</td>
+      <td>For genuine Framework-era code — old scheduled jobs are its sweet spot. Not for
+      redesigns.</td></tr>
+    <tr><td><a href="https://learn.microsoft.com/en-us/dotnet/azure/migration/appmod/overview" rel="noopener">GitHub Copilot app modernization</a></td>
+      <td>Microsoft's agent for .NET version upgrades and Azure migration — it replaced the
+      now-deprecated .NET Upgrade Assistant</td>
+      <td>Requires a paid Copilot plan; early reviews mixed. The Microsoft-blessed same-stack
+      route.</td></tr>
+    <tr><td><a href="https://github.com/github/scientist" rel="noopener">Scientist</a> /
+      <a href="https://github.com/scientistproject/Scientist.net" rel="noopener">Scientist.NET</a></td>
+      <td>In-process parallel-run library: control vs candidate, mismatches published</td>
+      <td>The gentlest on-ramp to shadow testing. Read the README even if you never install
+      it.</td></tr>
+    <tr><td><a href="https://github.com/opendiffy/diffy" rel="noopener">Diffy</a></td>
+      <td>Response-diffing proxy with the two-primaries noise trick</td>
+      <td>Archived upstream, maintained fork. Steal the idea if not the tool.</td></tr>
+    <tr><td>EF Core Power Tools</td>
+      <td>Database-first scaffolding with explicit, visible table selection</td>
+      <td>Exists because default scaffolders skip things silently — ours skipped empty tables,
+      which were exactly the ones we needed.</td></tr>
+    <tr><td>OpenRewrite / Moderne</td>
+      <td>Deterministic recipe-based refactoring at scale</td>
+      <td>The gold standard in the JVM world; support elsewhere still early. Named so you know
+      why it is absent from the rest of these notes.</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section><div class="wrap">
+  <h2><span class="num">02</span>Four books</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Book</th><th>Why</th><th>One idea to steal</th></tr></thead>
+    <tbody>
+    <tr><td><strong>Working Effectively with Legacy Code</strong><br>Michael Feathers, 2004</td>
+      <td>The origin of characterization testing and seams. Twenty years old; still the best
+      account of changing code you cannot yet test.</td>
+      <td>&#8220;Legacy code is code without tests&#8221; — by that definition, a rebuild
+      outrunning its checks is legacy code on the day it is written.</td></tr>
+    <tr><td><strong>Monolith to Microservices</strong><br>Sam Newman, 2019 &#183;
+      <a href="https://samnewman.io/books/monolith-to-microservices/" rel="noopener">samnewman.io</a></td>
+      <td>The migration-patterns catalogue: strangler fig, parallel run, branch by abstraction,
+      and the shared-database chapters.</td>
+      <td>In a parallel run, exactly one side is ever the source of truth — and mismatches are
+      data, not failures.</td></tr>
+    <tr><td><strong>Kill It with Fire</strong><br>Marianne Bellotti, 2021 &#183;
+      <a href="https://nostarch.com/kill-it-fire" rel="noopener">No Starch</a></td>
+      <td>The strategy book: when to modernize at all, how these projects lose momentum, and why
+      the hard part is the system <em>around</em> the system.</td>
+      <td>Her test for progress: does this step reduce risk this quarter, or only promise
+      to?</td></tr>
+    <tr><td><strong>Technical Agile Coaching with the Samman Method</strong><br>Emily Bache, 2021</td>
+      <td>If you want to teach these techniques to a team rather than only apply them.</td>
+      <td>Run the <a href="https://github.com/emilybache/GildedRose-Refactoring-Kata" rel="noopener">Gilded
+      Rose kata</a> as a team hour — it teaches approval testing in ninety minutes.</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section><div class="wrap">
+  <h2><span class="num">03</span>A reading order</h2>
+  <p class="sub">Shortest useful path, timed honestly.</p>
+  <ol class="order">
+    <li><a href="https://www.martinfowler.com/articles/patterns-legacy-displacement/feature-parity.html" rel="noopener"><b>Feature Parity</b></a> — the warning label for every rebuild-to-parity project. <span class="t">~15 min</span></li>
+    <li><a href="https://understandlegacycode.com/approval-tests/" rel="noopener"><b>Approval tests</b> at understandlegacycode.com</a> — the fastest practical intro. <span class="t">~15 min</span></li>
+    <li><a href="https://claude.com/blog/ai-code-migration" rel="noopener"><b>Anthropic's migration write-up</b></a> — rulebook, stress-test, validate the judge. <span class="t">~20 min</span></li>
+    <li><a href="https://github.com/github/scientist" rel="noopener"><b>Scientist's README</b></a> +
+      <a href="https://engineering.zalando.com/posts/2021/11/parallel-run.html" rel="noopener">Zalando's parallel-run post</a> — shadow verification in production. <span class="t">~30 min</span></li>
+    <li><a href="https://martinfowler.com/articles/patterns-legacy-displacement/" rel="noopener"><b>Patterns of Legacy Displacement</b></a>, the full series — over a week, not a sitting. <span class="t">~3 h</span></li>
+    <li><b>Working Effectively with Legacy Code</b> chs. 1&#8211;5 and 13, then
+      <b>Monolith to Microservices</b> chs. 3&#8211;4, then <b>Kill It with Fire</b> end to end.
+      <span class="t">books</span></li>
+  </ol>
+  <div class="callout ok"><span class="k">The thread through all of it</span>
+  <p>From Feathers in 2004 to automated million-line migrations in 2026, every serious source
+  arrives at the same sentence: <strong>the migration is only as good as the thing that judges
+  it.</strong> Build the judge first, make sure it can say no, and the rest is throughput.</p></div>
+</div></section>
+</main>
+
+<footer class="site"><div class="wrap">
+  <p>Field notes from a real legacy-modernization engagement — a national healthcare workforce
+  survey system, anonymized. The numbers are real; the names are deliberately absent. Hand-built
+  static HTML, no framework, no tracking.</p>
+</div></footer>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Migration Field Notes</title>
+<meta name="description" content="What we learned rebuilding a twenty-year-old healthcare system — the techniques, the failure patterns, and the rule that survived them all.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">Migration <span>Field Notes</span></a>
+  <nav class="site" aria-label="Site">
+    <a href="approach.html">The approach</a>
+    <a href="lessons.html">The lessons</a>
+    <a href="techniques.html">The techniques</a>
+    <a href="resources.html">Toolkit &amp; reading</a>
+  </nav>
+</div></header>
+
+<main>
+<div class="hero"><div class="wrap">
+  <div class="eyebrow">Field notes from a real engagement</div>
+  <h1>The migration is only as good as the thing that judges it</h1>
+  <p class="lede">We spent months rebuilding a twenty-year-old healthcare workforce system —
+  a framework-locked monolith on an end-of-life runtime, eight scheduled jobs, and a shared
+  database acting as the integration bus. These notes are what survived: the techniques that have
+  names, the failure that kept returning in different clothes, and the numbers we can prove.</p>
+</div></div>
+
+<section><div class="wrap">
+  <h2><span class="num">Start anywhere</span>Four short reads</h2>
+  <div class="tiles">
+    <a class="tile" href="approach.html">
+      <b>The approach</b>
+      <span>Why counting screens lies to you, how six independent readings of one system found
+      what no single reading could, and what happened when we verified the plan by building
+      against it.</span>
+      <span class="go">Read the approach &#8594;</span>
+    </a>
+    <a class="tile" href="lessons.html">
+      <b>The lessons</b>
+      <span>One failure appeared eight times wearing different clothes: a check that passes
+      without exercising the thing it names. The catalogue, and the rules that came out of it.</span>
+      <span class="go">Read the lessons &#8594;</span>
+    </a>
+    <a class="tile" href="techniques.html">
+      <b>The techniques</b>
+      <span>Characterization testing, golden masters, parallel runs, the strangler fig, and the
+      feature-parity trap — each with what it is, where it bites, and the sources.</span>
+      <span class="go">Read the techniques &#8594;</span>
+    </a>
+    <a class="tile" href="resources.html">
+      <b>Toolkit &amp; reading</b>
+      <span>The tools that exist for this work — from Anthropic's migration kit to response-diffing
+      proxies — plus four books and a reading order that takes an evening to start.</span>
+      <span class="go">Browse the shelf &#8594;</span>
+    </a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2><span class="num">The honest numbers</span>What actually happened</h2>
+  <p class="sub">Every figure below is real, measured on the engagement these notes come from.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Claim</th><th>Number</th><th>What it taught</th></tr></thead>
+    <tbody>
+    <tr><td>Features found by reading six sources independently, versus the specification's own
+      chapter count</td><td class="n"><strong>32 vs 21</strong></td>
+      <td>No single source saw more than 30 of the 32. Independence is what makes agreement mean
+      something.</td></tr>
+    <tr><td>Features with no user interface at all</td><td class="n"><strong>15 of 32</strong></td>
+      <td>A plan derived from screenshots is structurally blind to half the system.</td></tr>
+    <tr><td>Build batches that found the plan accurate, when we finally built against it</td>
+      <td class="n"><strong>1 of 16</strong></td>
+      <td>The feature-parity trap, measured. Plans describe systems well and work badly.</td></tr>
+    <tr><td>Pieces of work aimed at routes the legacy could not even serve</td>
+      <td class="n"><strong>16</strong></td>
+      <td>Our route scanner read configuration files without stripping comments. Derived numbers
+      are only as good as the deriver.</td></tr>
+    <tr><td>Times one failure pattern recurred — a green check that never exercised the thing it
+      named</td><td class="n"><strong>8</strong></td>
+      <td>The central lesson of the whole engagement. See <a href="lessons.html">the lessons</a>.</td></tr>
+    <tr><td>&#8220;Impossible&#8221; features — no trace on any source — that turned out to exist
+      when someone finally looked</td><td class="n"><strong>5 of 5</strong></td>
+      <td>Twenty minutes in the running system beats a week of reading its code.</td></tr>
+    <tr><td>Automated checks passing on the rebuild at time of writing</td>
+      <td class="n"><strong>6,889</strong></td>
+      <td>And the page on <a href="lessons.html">lessons</a> explains exactly how much — and how
+      little — that green is worth.</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section><div class="wrap">
+  <h2><span class="num">The thesis</span>One sentence, earned eight times</h2>
+  <div class="callout ok"><span class="k">If you keep nothing else</span>
+  <p><strong>Before you trust a check, make it fail.</strong> Break the code on purpose and watch
+  the check notice. If you cannot describe the input that turns it red, it is not a check — it is
+  decoration, and it is quietly converting &#8220;we don't know&#8221; into &#8220;we verified
+  it&#8221;.</p>
+  <p>Every source we later read — from a 2004 book on legacy code to a 2026 write-up of a
+  million-line automated migration — turns out to say the same thing in its own words. We had to
+  learn it the hard way first. These notes exist so you don't.</p></div>
+</div></section>
+</main>
+
+<footer class="site"><div class="wrap">
+  <p>Field notes from a real legacy-modernization engagement — a national healthcare workforce
+  survey system, anonymized. The numbers are real; the names are deliberately absent. Hand-built
+  static HTML, no framework, no tracking.</p>
+</div></footer>
+
+</body>
+</html>

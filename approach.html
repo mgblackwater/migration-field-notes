@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Approach — Migration Field Notes</title>
+<meta name="description" content="How to find out what a legacy system actually does: six independent sources, features versus screens, and verifying the plan by building against it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">Migration <span>Field Notes</span></a>
+  <nav class="site" aria-label="Site">
+    <a href="approach.html" aria-current="page">The approach</a>
+    <a href="lessons.html">The lessons</a>
+    <a href="techniques.html">The techniques</a>
+    <a href="resources.html">Toolkit &amp; reading</a>
+  </nav>
+</div></header>
+
+<main>
+<div class="hero"><div class="wrap">
+  <div class="eyebrow">The approach</div>
+  <h1>Finding out what a system actually does</h1>
+  <p class="lede">Before you can rebuild a system you have to know what it is — and the ways teams
+  usually find out are quietly broken. This is the method that worked for us, with the numbers
+  that prove where the usual methods failed.</p>
+</div></div>
+
+<section><div class="wrap">
+  <h2><span class="num">01</span>The trap of counting what you can see</h2>
+  <p>Our first plan was a list of 65 screens. It felt rigorous: a crawler had walked the running
+  application in every role, taken 351 screenshots, and the plan was derived from them. Derived —
+  that was its virtue over a hand-written list.</p>
+  <p>But <strong>65 was never a count of what the system does. It was a count of what a camera
+  could reach.</strong> A screenshot crawler cannot photograph a stored procedure, a scheduled
+  job, an endpoint no screen calls, or a rule that lives in a permission matrix. When we later
+  derived the feature list properly, <strong>15 of 32 features had no screen at all</strong> —
+  including the calculation the entire system existed to produce, which lived in stored
+  procedures and was visible to nothing the crawler could see.</p>
+  <div class="callout"><span class="k">The general form</span>
+  <p>Every discovery method has a blind spot shaped exactly like the thing it cannot observe —
+  and its output never warns you. The screenshot plan didn't say &#8220;I am blind to batch
+  jobs&#8221;. It just had no rows for them, and an absent row looks identical to an absent
+  feature.</p></div>
+</div></section>
+
+<section><div class="wrap">
+  <h2><span class="num">02</span>Six sources, read independently</h2>
+  <p class="sub">The fix is not a better single method. It is several methods whose blind spots
+  do not overlap — read <em>independently</em>, so that agreement means something.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Source</th><th>What it can tell you</th><th>What it cannot</th></tr></thead>
+    <tbody>
+    <tr><td><strong>The front-end source</strong></td>
+      <td>Every page, its address, the endpoints it calls — including pop-up dialogs no crawler
+      opens</td>
+      <td>Whether any of it still works on the server</td></tr>
+    <tr><td><strong>Screenshots of the running system</strong></td>
+      <td>What a real user is shown, role by role — the only source for &#8220;who sees which
+      rows&#8221;</td>
+      <td>Anything with no screen to photograph</td></tr>
+    <tr><td><strong>The written specification</strong></td>
+      <td>Intent, and rules nobody would guess from code</td>
+      <td>Anything built after it was written — and ours contradicted itself in 19 places</td></tr>
+    <tr><td><strong>The permission workbooks</strong></td>
+      <td>Thousands of individual access decisions, cell by cell</td>
+      <td>Everything that is not a permission</td></tr>
+    <tr><td><strong>The live database</strong></td>
+      <td>Structure, cascades, what is actually populated</td>
+      <td>Any rule at all — ours had zero constraints, so nothing was enforced in storage</td></tr>
+    <tr><td><strong>The stored procedures</strong></td>
+      <td>The arithmetic — in our case the only place the core calculation existed</td>
+      <td>Anything about the user interface</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><strong>Why independence matters:</strong> two readers agreeing after reading <em>different</em>
+  evidence is corroboration. Two readers agreeing after reading the <em>same document</em> is an
+  echo. We ran each reading blind to the others and only then reconciled: 440 findings, 82
+  contradictions, 63 open questions — and no single source saw more than 30 of the 32 features.
+  The contradictions were not noise to be smoothed away; each one was a question with an owner.</p>
+
+  <div class="callout"><span class="k">Rule that came out of this</span>
+  <p><strong>Derive every number from an artifact that changes when reality changes.</strong>
+  A hand-written inventory has no oracle, so it stays wrong quietly. Our &#8220;8 batch
+  jobs&#8221; turned out to be four different true numbers wearing one label — 8 repositories,
+  9 programs, 9 scheduled registrations, 7 that actually recur — and no document could have
+  caught it, because every document was copying another document. A fifty-line script reading
+  the scheduler's own configuration caught it immediately, and keeps catching it.</p></div>
+</div></section>
+
+<section><div class="wrap">
+  <h2><span class="num">03</span>A feature is not a screen</h2>
+  <p class="sub">The single most useful reframing of the whole engagement: tag every feature with
+  <em>where it actually lives</em>, because that decides the shape of the work and — more
+  important — what can judge it.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Surface</th><th>The unit of work</th><th>The oracle that judges it</th></tr></thead>
+    <tbody>
+    <tr><td><strong>A page people use</strong></td><td>A screen slice — the page plus the
+      endpoints behind it</td><td>A screenshot of the old screen, plus response comparison</td></tr>
+    <tr><td><strong>Endpoints with no page</strong></td><td>A contract slice</td>
+      <td>The old system's response bodies</td></tr>
+    <tr><td><strong>A scheduled job</strong></td><td>A job slice</td>
+      <td>The rows it writes, diffed against an old run</td></tr>
+    <tr><td><strong>Logic inside the database</strong></td><td><strong>Not a rewrite.</strong>
+      A characterization harness over the existing procedures</td>
+      <td>The procedure itself — a golden master</td></tr>
+    <tr><td><strong>Nothing found anywhere</strong></td><td>An investigation, never an
+      invention</td><td>None yet — that is the point</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Filing everything as &#8220;screens&#8221; prices a golden-master harness over financial
+  arithmetic as if it were a form with a grid — and that mispricing is invisible until someone
+  builds the wrong thing well.</p>
+</div></section>
+
+<section><div class="wrap">
+  <h2><span class="num">04</span>Verify the plan by building against it</h2>
+  <p class="sub">A plan is a theory about the work. Ours met reality in one long automated run:
+  sixteen batches of workers attempting all 121 unbuilt pieces, each instructed that <em>an honest
+  failure with a precise reason beats a faked success</em>.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Outcome</th><th class="n">Pieces</th><th>Meaning</th></tr></thead>
+    <tbody>
+    <tr><td class="ok">Built, compiling, checks passing</td><td class="n">78</td>
+      <td>64% — real progress, with a caveat the <a href="lessons.html">lessons page</a> owns</td></tr>
+    <tr><td>Partly built — stopped at a real obstacle</td><td class="n">10</td>
+      <td>Each named, with what is missing</td></tr>
+    <tr><td>Blocked on a human answer</td><td class="n">11</td>
+      <td>Each named, with the question it waits on</td></tr>
+    <tr><td class="bad">Aimed at things that do not exist</td><td class="n">22</td>
+      <td>The most valuable output of the run</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Only <strong>one batch in sixteen</strong> reported the plan had described its work
+  accurately. Sixteen rows named routes the legacy could not even serve — a whole navigation
+  section existed in the source tree but was commented out of the application, and our route
+  scanner read the routing files without stripping comments. Five features our sources had
+  written off as &#8220;no trace anywhere&#8221; all existed when a batch was sent to
+  <em>investigate rather than invent</em> — one of them fully configured in production. And two
+  of our scariest documented risks turned out to be false: the &#8220;destructive&#8221; void
+  operation changed a status flag and deleted nothing, and the &#8220;unrecoverable&#8221;
+  archival cascade was soft-delete all the way down.</p>
+
+  <div class="callout ok"><span class="k">What to copy</span>
+  <p>Treat the first build pass across a legacy-replacement plan as <strong>an instrument for
+  falsifying the plan</strong>, not as delivery. Require every worker to report
+  plan-accurate / partly-wrong / wrong with evidence, and read those verdicts before celebrating
+  the completion count. Ours cost one night and corrected months of planning assumptions.</p></div>
+</div></section>
+</main>
+
+<footer class="site"><div class="wrap">
+  <p>Field notes from a real legacy-modernization engagement — a national healthcare workforce
+  survey system, anonymized. The numbers are real; the names are deliberately absent. Hand-built
+  static HTML, no framework, no tracking.</p>
+</div></footer>
+
+</body>
+</html>

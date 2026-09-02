@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Techniques — Migration Field Notes</title>
+<meta name="description" content="Characterization testing, golden masters, parallel runs, response diffing, the strangler fig and the feature-parity trap — what each is, where it bites, and the sources.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">Migration <span>Field Notes</span></a>
+  <nav class="site" aria-label="Site">
+    <a href="approach.html">The approach</a>
+    <a href="lessons.html">The lessons</a>
+    <a href="techniques.html" aria-current="page">The techniques</a>
+    <a href="resources.html">Toolkit &amp; reading</a>
+  </nav>
+</div></header>
+
+<main>
+<div class="hero"><div class="wrap">
+  <div class="eyebrow">The techniques</div>
+  <h1>Everything here has a name</h1>
+  <p class="lede">We reinvented half of these before learning they had names, literatures, and
+  known lists of ways they go wrong. Knowing the names buys you the pitfalls other people already
+  paid for. Each card: what it is, where it bites, and where to read more.</p>
+</div></div>
+
+<section><div class="wrap">
+
+  <div class="card">
+    <h4>Characterization testing</h4>
+    <div class="aka">Michael Feathers &#183; also called pinning tests</div>
+    <dl>
+      <dt>What</dt><dd>Tests that capture what a system <em>currently does</em> — not what it
+      should do. Write an assertion you know is wrong, run it, paste the actual behaviour in as
+      the expected value. The test then guards that behaviour, bugs included, while you change
+      the code underneath.</dd>
+      <dt>Why it matters</dt><dd class="fit">It is the formal name for &#8220;parity, not
+      correction&#8221;. On our engagement, an obvious-looking fix to a financial calculation
+      would have <em>doubled</em> a downstream figure — proven by experiment. Characterize first;
+      argue about correctness afterwards, with the business, on the record.</dd>
+      <dt>Watch out</dt><dd class="trap">A characterization test is only as strong as the inputs
+      it captures. Two identical records characterize almost nothing. Companion ideas worth
+      knowing: <strong>seams</strong> (places behaviour can be altered without editing code) and
+      <strong>sprout method</strong> (grow new code beside old instead of editing it).</dd>
+      <dt>Read</dt><dd><em>Working Effectively with Legacy Code</em>, Feathers &#183;
+      <a href="https://understandlegacycode.com/approval-tests/" rel="noopener">understandlegacycode.com</a> &#183;
+      <a href="https://martinfowler.com/articles/uncovering-mainframe-seams.html" rel="noopener">Uncovering the Seams in Mainframes</a></dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>Golden master &amp; approval testing</h4>
+    <div class="aka">Emily Bache, Llewellyn Falco &#183; also snapshot testing</div>
+    <dl>
+      <dt>What</dt><dd>Capture an <em>entire output</em> — a report, a response, a rendered
+      screen — as an approved artifact, and fail on any diff. The first run records the master;
+      every later run compares. Cheap, broad coverage over code you don't yet understand.</dd>
+      <dt>Why it matters</dt><dd class="fit">The right tool for report-heavy legacy systems:
+      approve the old report's output once, then diff the rebuild against it forever. Our
+      screenshot pairs and recorded golden outputs were exactly this.</dd>
+      <dt>Watch out</dt><dd class="trap">Masters recorded from a bad fixture bless the bad
+      fixture. Noise — dates, row order, float formatting — must be scrubbed or every run is a
+      false alarm, and teams learn to ignore the harness. And never source the expected values
+      from the system under test: that is the circular oracle from
+      <a href="lessons.html">the lessons</a>.</dd>
+      <dt>Read</dt><dd><a href="https://coding-is-like-cooking.info/2013/09/approval-testing/" rel="noopener">Bache — Approval Testing</a> &#183;
+      <a href="https://github.com/approvals/ApprovalTests.Net" rel="noopener">ApprovalTests.Net</a> &#183;
+      <a href="https://github.com/emilybache/GildedRose-Refactoring-Kata" rel="noopener">the Gilded Rose kata</a> — do it once; it teaches more than reading</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>Parallel run / shadow testing</h4>
+    <div class="aka">Sam Newman &#183; GitHub's Scientist &#183; also dark launching</div>
+    <dl>
+      <dt>What</dt><dd>Run old and new implementations side by side on the same inputs, compare
+      results, and keep exactly one as the source of truth. GitHub's Scientist library wraps the
+      old path as &#8220;control&#8221; and the new as &#8220;candidate&#8221;, publishes
+      mismatches, and never lets candidate errors reach users.</dd>
+      <dt>Why it matters</dt><dd class="fit">The strongest verification available when old and
+      new share a database: replay the same requests against both, diff the responses.
+      Mismatches are <em>data to triage</em>, not failures — some will be the old system's
+      noise.</dd>
+      <dt>Watch out</dt><dd class="trap">Side effects. A parallel run of anything that
+      <em>writes</em> — submissions, emails, outbound files — doubles the writes unless the
+      candidate is sandboxed. Most of the literature on this pattern is really about that one
+      problem.</dd>
+      <dt>Read</dt><dd><a href="https://github.com/github/scientist" rel="noopener">github/scientist</a> &#183;
+      <a href="https://github.com/scientistproject/Scientist.net" rel="noopener">Scientist.NET</a> &#183;
+      <a href="https://engineering.zalando.com/posts/2021/11/parallel-run.html" rel="noopener">Zalando — Parallel Run</a> &#183;
+      <em>Monolith to Microservices</em> ch. 3</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>Response diffing at the proxy</h4>
+    <div class="aka">Twitter's Diffy &#183; the two-primaries trick</div>
+    <dl>
+      <dt>What</dt><dd>A proxy multicasts every request to <em>three</em> instances: the new
+      code, and <strong>two identical copies of the old code</strong>. Differences between the
+      two old copies measure the system's natural noise; only new-code differences that exceed
+      that noise get reported.</dd>
+      <dt>Why it matters</dt><dd class="fit">The two-primaries idea is the insight worth stealing
+      even without the tool: it separates &#8220;changed behaviour&#8221; from
+      &#8220;non-deterministic anyway&#8221; — the two things every naive diff harness
+      conflates.</dd>
+      <dt>Read</dt><dd><a href="https://github.com/opendiffy/diffy" rel="noopener">opendiffy/diffy</a> (maintained fork) &#183;
+      <a href="https://github.com/twitter-archive/diffy" rel="noopener">the original</a> &#183;
+      <a href="https://www.gabrielpereira.dev/en/posts/migrating-apis-using-diffy-and-nginx/" rel="noopener">a worked migration example with NGINX</a></dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>Strangler fig</h4>
+    <div class="aka">Martin Fowler &#183; with event interception and divert-the-flow</div>
+    <dl>
+      <dt>What</dt><dd>Grow the new system around the old, intercepting traffic at the edges and
+      routing one capability at a time to the replacement until the old system is hollow. The
+      point is operational: <strong>rollback is a routing change, never a deploy.</strong></dd>
+      <dt>Why it matters</dt><dd class="fit">With a shared database underneath, per-path routing
+      at a gateway lets old and new serve different capabilities over the same data during the
+      transition — which is also what makes parallel runs cheap to wire in.</dd>
+      <dt>Read</dt><dd><a href="https://martinfowler.com/bliki/StranglerFigApplication.html" rel="noopener">Strangler Fig Application</a> &#183;
+      <a href="https://martinfowler.com/articles/patterns-legacy-displacement/divert-the-flow.html" rel="noopener">Divert the Flow</a></dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>Patterns of Legacy Displacement — and the feature-parity trap</h4>
+    <div class="aka">Cartwright, Horn &amp; Lewis (Thoughtworks) &#183; the umbrella series</div>
+    <dl>
+      <dt>What</dt><dd>The most complete modern treatment of replacing old systems: how to break
+      the problem up, which transitional structures to build knowing you will demolish them, and
+      a catalogue of named patterns — <strong>Transitional Architecture</strong>,
+      <strong>Legacy Mimic</strong> (the new system impersonating the old to its unchanged
+      neighbours), <strong>Event Interception</strong>, and more.</dd>
+      <dt>The warning label</dt><dd class="trap"><strong>Feature Parity</strong> — replicating an
+      old system faithfully on a new stack — is called a trap by the authors outright:
+      &#8220;people greatly underestimate the effort required.&#8221; Our engagement measured
+      it: when we finally built against our parity plan, <strong>one batch in sixteen</strong>
+      found the plan accurate, and sixteen planned pieces targeted things the old system could
+      not even serve. Read it as the argument for shrinking scope to the flows that carry value —
+      not as a prohibition on parity where regulation or funding arithmetic genuinely demands
+      it.</dd>
+      <dt>Read</dt><dd><a href="https://martinfowler.com/articles/patterns-legacy-displacement/" rel="noopener">the series</a> &#183;
+      <a href="https://www.martinfowler.com/articles/patterns-legacy-displacement/feature-parity.html" rel="noopener">Feature Parity</a> &#183;
+      <a href="https://www.martinfowler.com/articles/patterns-legacy-displacement/transitional-architecture.html" rel="noopener">Transitional Architecture</a> &#183;
+      <a href="https://martinfowler.com/articles/patterns-legacy-displacement/legacy-mimic.html" rel="noopener">Legacy Mimic</a></dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>Branch by abstraction &amp; expand-contract</h4>
+    <div class="aka">Paul Hammant &#183; Danilo Sato &#183; the in-codebase versions</div>
+    <dl>
+      <dt>What</dt><dd>For replacing a component <em>inside</em> a codebase you keep shipping:
+      put an abstraction over the old implementation, grow the new one behind it, flip, remove.
+      <strong>Expand-contract</strong> is the same shape for interfaces and schemas — add the
+      new alongside the old, migrate callers, then remove. Never a breaking change in one
+      step.</dd>
+      <dt>Read</dt><dd><a href="https://martinfowler.com/bliki/BranchByAbstraction.html" rel="noopener">Fowler — Branch by Abstraction</a> &#183;
+      <a href="https://paulhammant.com/blog/branch_by_abstraction.html" rel="noopener">Hammant's original</a> &#183;
+      <a href="https://martinfowler.com/bliki/ParallelChange.html" rel="noopener">Parallel Change</a></dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>Anti-corruption layer</h4>
+    <div class="aka">Eric Evans, Domain-Driven Design</div>
+    <dl>
+      <dt>What</dt><dd>A translation layer between the new system and a legacy model you do not
+      want leaking in. The new code speaks its own clean language; the layer does the dirty
+      conversion at the border.</dd>
+      <dt>Why it matters</dt><dd class="fit">Two borders demanded it on our engagement: an
+      outbound file hand-off to an external costing system, and a frozen legacy schema whose
+      misspelled columns and unlabelled integer codes should stop at the data layer rather than
+      spread through a new front end.</dd>
+      <dt>Read</dt><dd><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer" rel="noopener">Microsoft's pattern page</a> — the concise version; Evans' book for the full argument</dd>
+    </dl>
+  </div>
+
+  <div class="callout"><span class="k">Also worth knowing</span>
+  <p><strong>The Mikado Method</strong> (Ellnestam &amp; Brodwall) — plan a large change by
+  attempting it, reverting, and graphing what blocked you; the formal version of what a failed
+  build pass teaches by accident. And <strong>dark launching</strong> — a parallel run whose new
+  path is invisible to users; the reason a batch-mode harness comes first when there is no
+  production traffic to shadow yet.</p></div>
+
+</div></section>
+</main>
+
+<footer class="site"><div class="wrap">
+  <p>Field notes from a real legacy-modernization engagement — a national healthcare workforce
+  survey system, anonymized. The numbers are real; the names are deliberately absent. Hand-built
+  static HTML, no framework, no tracking.</p>
+</div></footer>
+
+</body>
+</html>
